@@ -10,8 +10,8 @@ const TICKS = Array.from({ length: 60 }, (_, i) => i)
 
 /**
  * A thin-line wristwatch showing the visitor's local time with smoothly
- * sweeping hands. Clicking or tapping turns it into an eye that winks with
- * a warm, welcoming smile, then it turns back into the watch.
+ * sweeping hands. Clicking or tapping turns it into a friendly two-eyed
+ * smiling face that gives a warm welcoming wink, then returns to the watch.
  */
 export function WristWatch() {
   const hourRef = useRef<SVGLineElement>(null)
@@ -139,29 +139,39 @@ export function WristWatch() {
         </g>
 
         <g className="syro-watch__eye">
-          {/* Friendly welcoming face outline + warm smile */}
+          {/* Friendly two-eyed face outline, eyebrows & warm smile */}
           <g className="syro-watch__smile-face">
-            <circle cx={CX} cy="78" r="39" className="syro-watch__fine" />
-            {/* Eyebrow */}
-            <path d="M32 50 Q50 42 68 50" className="syro-watch__fine" />
+            <circle cx={CX} cy="72" r="38" className="syro-watch__fine" />
+            {/* Left & Right Eyebrows */}
+            <path d="M23 53 Q33 48 42 52" className="syro-watch__fine" />
+            <path d="M58 52 Q67 47 77 52" className="syro-watch__fine" />
             {/* Warm welcoming smile */}
-            <path d="M33 93 Q50 107 67 93" className="syro-watch__smile" />
+            <path d="M33 87 Q50 101 67 87" className="syro-watch__smile" />
             {/* Subtle smile corner dimples */}
-            <path d="M31.5 91.5 Q33.5 93 32.5 95.5" className="syro-watch__fine" />
-            <path d="M68.5 91.5 Q66.5 93 67.5 95.5" className="syro-watch__fine" />
+            <path d="M31.5 85.5 Q33.5 87 32.5 89.5" className="syro-watch__fine" />
+            <path d="M68.5 85.5 Q66.5 87 67.5 89.5" className="syro-watch__fine" />
           </g>
 
+          {/* Left Eye (stays open and friendly) */}
+          <g className="syro-watch__left-eye">
+            <path d="M20 65 Q33 54 45 65 Q33 76 20 65 Z" />
+            <circle cx="33" cy="65" r="5.5" />
+            <circle cx="33" cy="65" r="2.4" className="syro-watch__pupil" />
+            <circle cx="34.8" cy="63.3" r="0.9" className="syro-watch__glint" />
+          </g>
+
+          {/* Right Eye (open state before/after wink) */}
           <g className="syro-watch__lid">
-            <path d="M22 68 Q50 45 78 68 Q50 91 22 68 Z" />
-            <circle cx={CX} cy="68" r="10.5" />
-            <circle cx={CX} cy="68" r="4.5" className="syro-watch__pupil" />
-            <circle cx="53.5" cy="64.5" r="1.5" className="syro-watch__glint" />
+            <path d="M55 65 Q67 54 80 65 Q67 76 55 65 Z" />
+            <circle cx="67" cy="65" r="5.5" />
+            <circle cx="67" cy="65" r="2.4" className="syro-watch__pupil" />
+            <circle cx="68.8" cy="63.3" r="0.9" className="syro-watch__glint" />
           </g>
 
-          {/* Closed eye: a happy upward-curved smile wink with soft lashes */}
+          {/* Right Eye (closed state: happy upward-curved wink with lashes) */}
           <g className="syro-watch__closed">
-            <path d="M24 69 Q50 54 76 69" />
-            <path d="M33 63 L30 57 M44 60 L43 53 M56 60 L57 53 M67 63 L70 57" />
+            <path d="M56 66 Q67 57 79 66" />
+            <path d="M61 61 L59 57 M67 59.5 L67 55 M73 61 L75 57" />
           </g>
         </g>
       </svg>

@@ -154,8 +154,8 @@ code {
   --syro-soft: rgb(10 11 13 / 0.55);
   --syro-glow-opacity: 0.35;
   --syro-watch-line: #8b8e94;
-  /* Served through Netlify Image CDN as a resized WebP (alpha preserved). */
-  --syro-logo: url('/.netlify/images?url=/img/syro-horizontal.png&w=1200&fm=webp');
+  /* Served directly from public/img/ (compatible with GitHub Pages subpaths & custom domains). */
+  --syro-logo: url('./img/syro-horizontal.png');
 }
 
 .dark {
@@ -352,11 +352,15 @@ body {
 
 .syro-watch__face,
 .syro-watch__eye,
-.syro-watch__lid,
-.syro-watch__closed,
-.syro-watch__smile-face {
+.syro-watch__smile-face,
+.syro-watch__left-eye {
   transform-box: view-box;
-  transform-origin: 50px 68px;
+  transform-origin: 50px 70px;
+}
+.syro-watch__lid,
+.syro-watch__closed {
+  transform-box: view-box;
+  transform-origin: 67px 65px;
 }
 .syro-watch__eye {
   opacity: 0;
