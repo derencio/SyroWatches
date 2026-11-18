@@ -1,0 +1,535 @@
+@import 'tailwindcss' source('../');
+
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+body {
+  @apply m-0;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+:root {
+  --font-body:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-heading: var(--font-body);
+  --content-width: 72rem;
+  --reading-width: 42rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.21 0.006 285.885);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.871 0.006 286.286);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-primary: oklch(0.21 0.006 285.885);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.871 0.006 286.286);
+}
+
+.dark {
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.141 0.005 285.823);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.141 0.005 285.823);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.274 0.006 286.033);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.274 0.006 286.033);
+  --input: oklch(0.274 0.006 286.033);
+  --ring: oklch(0.442 0.017 285.786);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.21 0.006 285.885);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.274 0.006 286.033);
+  --sidebar-ring: oklch(0.442 0.017 285.786);
+}
+
+@theme inline {
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
+  --container-content: var(--content-width);
+  --container-reading: var(--reading-width);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ───────────────────────── Syro placeholder ───────────────────────── */
+
+:root {
+  --font-body: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --syro-bg: #f6f6f4;
+  --syro-ink: #0a0b0d;
+  --syro-soft: rgb(10 11 13 / 0.55);
+  --syro-glow-opacity: 0.35;
+  --syro-watch-line: #8b8e94;
+  /* Served through Netlify Image CDN as a resized WebP (alpha preserved). */
+  --syro-logo: url('/.netlify/images?url=/img/syro-horizontal.png&w=1200&fm=webp');
+}
+
+.dark {
+  --syro-bg: #0a0b0d;
+  --syro-ink: #ffffff;
+  --syro-soft: rgb(255 255 255 / 0.6);
+  --syro-glow-opacity: 0.7;
+  --syro-watch-line: #8b8e94;
+}
+
+body {
+  background: var(--syro-bg);
+  color: var(--syro-ink);
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+
+.syro-page {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+  background: var(--syro-bg);
+  color: var(--syro-ink);
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+
+.syro-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: syro-rise 1.4s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+/* The logo is a single-colour mask so it always matches the ink colour:
+   white on the night version, near-black on the day version. */
+.syro-logo {
+  width: clamp(15rem, 52vw, 30rem);
+  aspect-ratio: 1600 / 407;
+  margin: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--syro-logo) center / contain no-repeat;
+  mask: var(--syro-logo) center / contain no-repeat;
+  transition: background-color 0.5s ease;
+}
+
+.syro-bar {
+  position: relative;
+  width: clamp(10rem, 30vw, 18rem);
+  height: 4px;
+  margin: clamp(2.5rem, 6vh, 4rem) 0 clamp(2rem, 5vh, 3.25rem);
+}
+
+.syro-bar__line,
+.syro-bar__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #ff2a2a,
+    #ff8a00,
+    #ffe600,
+    #2ee86b,
+    #00b7ff,
+    #4a3bff,
+    #b026ff,
+    #ff2a2a
+  );
+  background-size: 300% 100%;
+  animation: syro-flow 6s linear infinite;
+}
+
+.syro-bar__glow {
+  inset: -6px -4px;
+  filter: blur(12px);
+  opacity: var(--syro-glow-opacity);
+  transition: opacity 0.5s ease;
+}
+
+.syro-tagline {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(2.5rem, 8vw, 6.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.syro-dots span {
+  animation: syro-tick 2s steps(1, end) infinite;
+}
+.syro-dots span:nth-child(2) {
+  animation-name: syro-tick-2;
+}
+.syro-dots span:nth-child(3) {
+  animation-name: syro-tick-3;
+}
+
+.syro-toggle {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  color: var(--syro-soft);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.3s ease;
+}
+.syro-toggle:hover {
+  color: var(--syro-ink);
+  border-color: color-mix(in srgb, currentColor 40%, transparent);
+  transform: rotate(15deg);
+}
+.syro-toggle:focus-visible {
+  outline: 2px solid var(--syro-ink);
+  outline-offset: 3px;
+}
+
+/* Wristwatch in the bottom-left corner (75% of original size): transparent, thin grey lines. */
+.syro-watch {
+  position: absolute;
+  left: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 1;
+  width: clamp(3.5625rem, 8.25vw, 5.25rem);
+  aspect-ratio: 100 / 140;
+  padding: 0;
+  border: 0;
+  border-radius: 1rem;
+  background: transparent;
+  color: var(--syro-watch-line);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.3s ease;
+}
+.syro-watch:hover {
+  transform: translateY(-2px);
+}
+.syro-watch:focus-visible {
+  outline: 2px solid var(--syro-ink);
+  outline-offset: 4px;
+}
+.syro-watch svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.syro-watch__fine {
+  stroke-width: 0.6;
+}
+.syro-watch__hour {
+  stroke-width: 2;
+}
+.syro-watch__minute {
+  stroke-width: 1.3;
+}
+.syro-watch__second {
+  stroke-width: 0.6;
+}
+.syro-watch__smile {
+  stroke-width: 1.35;
+}
+.syro-watch__pin {
+  fill: currentColor;
+}
+.syro-watch__pupil {
+  fill: currentColor;
+}
+.syro-watch__glint {
+  fill: var(--syro-bg);
+  stroke: none;
+}
+
+.syro-watch__face,
+.syro-watch__eye,
+.syro-watch__lid,
+.syro-watch__closed,
+.syro-watch__smile-face {
+  transform-box: view-box;
+  transform-origin: 50px 68px;
+}
+.syro-watch__eye {
+  opacity: 0;
+}
+.syro-watch__closed {
+  opacity: 0;
+}
+
+/* 1.25x faster than original 2s -> 1.6s */
+.syro-watch.is-winking .syro-watch__face {
+  animation: syro-watch-face 1.6s ease-in-out both;
+}
+.syro-watch.is-winking .syro-watch__eye {
+  animation: syro-watch-eye 1.6s ease-in-out both;
+}
+.syro-watch.is-winking .syro-watch__lid {
+  animation: syro-watch-lid 1.6s ease-in-out both;
+}
+.syro-watch.is-winking .syro-watch__closed {
+  animation: syro-watch-closed 1.6s ease-in-out both;
+}
+.syro-watch.is-winking .syro-watch__smile-face {
+  animation: syro-watch-smile 1.6s ease-in-out both;
+}
+
+/* Watch shrinks into the eye, eye winks, then the watch returns. */
+@keyframes syro-watch-face {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  18%,
+  82% {
+    opacity: 0;
+    transform: scale(0.55) rotate(-25deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes syro-watch-eye {
+  0%,
+  10% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  24%,
+  76% {
+    opacity: 1;
+    transform: none;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+@keyframes syro-watch-lid {
+  0%,
+  40% {
+    transform: none;
+    opacity: 1;
+  }
+  48% {
+    transform: scaleY(0.06);
+    opacity: 1;
+  }
+  49%,
+  55% {
+    transform: scaleY(0.06);
+    opacity: 0;
+  }
+  56% {
+    transform: scaleY(0.06);
+    opacity: 1;
+  }
+  66%,
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes syro-watch-closed {
+  0%,
+  47% {
+    opacity: 0;
+  }
+  49%,
+  55% {
+    opacity: 1;
+  }
+  57%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes syro-watch-smile {
+  0%,
+  18% {
+    opacity: 0;
+    transform: scale(0.92) translateY(2px);
+  }
+  30%,
+  72% {
+    opacity: 1;
+    transform: none;
+  }
+  86%,
+  100% {
+    opacity: 0;
+    transform: scale(0.92) translateY(2px);
+  }
+}
+
+@keyframes syro-flow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 150% 50%;
+  }
+}
+
+/* Dots appear one by one, like a clock ticking. */
+@keyframes syro-tick {
+  0% {
+    opacity: 0.15;
+  }
+  25%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes syro-tick-2 {
+  0%,
+  25% {
+    opacity: 0.15;
+  }
+  50%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes syro-tick-3 {
+  0%,
+  50% {
+    opacity: 0.15;
+  }
+  75%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes syro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .syro-stage,
+  .syro-dots span {
+    animation: none;
+  }
+  .syro-bar__line,
+  .syro-bar__glow {
+    animation-duration: 20s;
+  }
+}
