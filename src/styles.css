@@ -155,7 +155,7 @@ code {
   --syro-glow-opacity: 0.35;
   --syro-watch-line: #8b8e94;
   /* Served directly from public/img/ (compatible with GitHub Pages subpaths & custom domains). */
-  --syro-logo: url('./img/syro-horizontal.png');
+  --syro-logo: url('../img/syro-horizontal.png');
 }
 
 .dark {
