@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { ArrowLeft, Moon, Sun } from 'lucide-react'
 import { WristWatch } from '@/components/wrist-watch'
@@ -11,11 +11,39 @@ export const Route = createFileRoute('/')({
 type Theme = 'night' | 'day'
 type View = 'home' | 'about'
 
+/** Fade duration in ms — keep in sync with `.syro-view` transition in styles.css. */
+const FADE_MS = 360
+
+/** Interlocking rings emblem forming the subtle "S" negative space */
+function SyroRingsEmblem() {
+  return (
+    <div className="syro-about__emblem" aria-hidden="true">
+      <svg viewBox="0 0 64 56" focusable="false">
+        {/* Upper-left interlocking ring */}
+        <path
+          d="M 38 14 A 13 13 0 1 0 38 34"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3.4"
+          strokeLinecap="round"
+        />
+        {/* Lower-right interlocking ring */}
+        <path
+          d="M 26 42 A 13 13 0 1 0 26 22"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3.4"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  )
+}
+
 function ArtistPaletteIcon({ label }: { label: string }) {
   return (
     <span className="syro-teaser-icon" title={label} aria-label={label}>
       <svg viewBox="0 0 36 28" aria-hidden="true" focusable="false">
-        {/* Oval artist palette silhouette with thumb hole */}
         <path
           d="M18 3C9.5 3 3 8.8 3 15.2C3 20.6 7.4 24.5 13.2 24.5C15.4 24.5 16.8 23.3 16.8 21.7C16.8 20.6 16.1 19.8 16.1 18.8C16.1 17.5 17.3 16.7 19.1 16.7H22.2C28.4 16.7 33 13.3 33 8.9C33 5.4 26.6 3 18 3Z"
           fill="none"
@@ -24,7 +52,6 @@ function ArtistPaletteIcon({ label }: { label: string }) {
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {/* Thumb cutout */}
         <circle
           cx="25.8"
           cy="10.2"
@@ -33,7 +60,6 @@ function ArtistPaletteIcon({ label }: { label: string }) {
           stroke="currentColor"
           strokeWidth="1.15"
         />
-        {/* Subtle color daubs */}
         <circle cx="9.2" cy="13.5" r="1.45" fill="#ff3b30" />
         <circle cx="12.6" cy="9.2" r="1.45" fill="#ffcc00" />
         <circle cx="18.2" cy="7.8" r="1.45" fill="#2ee86b" />
@@ -47,7 +73,6 @@ function SunMoonFlipIcon({ label }: { label: string }) {
   return (
     <span className="syro-teaser-icon" title={label} aria-label={label}>
       <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-        {/* Outer dial ring */}
         <circle
           cx="16"
           cy="16"
@@ -58,7 +83,6 @@ function SunMoonFlipIcon({ label }: { label: string }) {
           strokeDasharray="2 2.2"
           opacity="0.45"
         />
-        {/* Diagonal flip axis */}
         <line
           x1="7.5"
           y1="24.5"
@@ -68,7 +92,6 @@ function SunMoonFlipIcon({ label }: { label: string }) {
           strokeWidth="1.1"
           opacity="0.55"
         />
-        {/* Sun (top-left hemisphere) */}
         <circle
           cx="11.5"
           cy="11.5"
@@ -83,7 +106,6 @@ function SunMoonFlipIcon({ label }: { label: string }) {
           strokeWidth="1.15"
           strokeLinecap="round"
         />
-        {/* Crescent Moon (bottom-right hemisphere) */}
         <path
           d="M22.2 17.8C20.2 18.1 18.8 19.8 19.1 21.8C19.4 23.6 21 24.9 22.8 24.8C21.3 25.8 19.2 25.6 17.9 24.2C16.5 22.7 16.6 20.3 18.1 18.9C19.2 17.8 20.8 17.4 22.2 17.8Z"
           fill="none"
@@ -98,9 +120,10 @@ function SunMoonFlipIcon({ label }: { label: string }) {
 
 function Home() {
   const [theme, setTheme] = useState<Theme>('night')
-  const [view, setView] = useState<View>('home')
-  // Defaulted to 'en'; ready to switch to 'pt' in the future
+  const [targetView, setTargetView] = useState<View>('home')
+  const [visibleView, setVisibleView] = useState<View | null>('home')
   const [locale] = useState<Locale>('en')
+  const transitionTimer = useRef<number | undefined>(undefined)
 
   const t = DICTIONARY[locale]
 
@@ -109,7 +132,19 @@ function Home() {
     setTheme(
       document.documentElement.classList.contains('dark') ? 'night' : 'day',
     )
+    return () => window.clearTimeout(transitionTimer.current)
   }, [])
+
+  const switchView = (next: View) => {
+    if (next === targetView) return
+    setTargetView(next)
+    // Fade out the current view completely before revealing the next view.
+    setVisibleView(null)
+    window.clearTimeout(transitionTimer.current)
+    transitionTimer.current = window.setTimeout(() => {
+      setVisibleView(next)
+    }, FADE_MS)
+  }
 
   const toggleTheme = () => {
     const next: Theme = theme === 'night' ? 'day' : 'night'
@@ -123,7 +158,7 @@ function Home() {
   }
 
   return (
-    <main className={`syro-page ${view === 'about' ? 'is-about' : ''}`}>
+    <main className={`syro-page ${targetView === 'about' ? 'is-about' : ''}`}>
       <button
         type="button"
         onClick={toggleTheme}
@@ -136,8 +171,8 @@ function Home() {
 
       {/* Primary Hero Stage */}
       <div
-        className={`syro-stage syro-view ${view === 'home' ? 'is-active' : 'is-hidden'}`}
-        aria-hidden={view !== 'home'}
+        className={`syro-stage syro-view ${visibleView === 'home' ? 'is-active' : 'is-hidden'}`}
+        aria-hidden={visibleView !== 'home'}
       >
         <h1 className="syro-logo" role="img" aria-label="Syro">
           <span className="sr-only">Syro</span>
@@ -159,12 +194,14 @@ function Home() {
         </p>
       </div>
 
-      {/* Subtle About Us Stage */}
+      {/* Sequential About Us Stage */}
       <section
-        className={`syro-about syro-view ${view === 'about' ? 'is-active' : 'is-hidden'}`}
-        aria-hidden={view !== 'about'}
+        className={`syro-about syro-view ${visibleView === 'about' ? 'is-active' : 'is-hidden'}`}
+        aria-hidden={visibleView !== 'about'}
         aria-labelledby="syro-about-heading"
       >
+        <SyroRingsEmblem />
+
         <header className="syro-etymology">
           <p className="syro-etymology__entry">
             <strong className="syro-etymology__word">
@@ -173,8 +210,8 @@ function Home() {
             <span className="syro-etymology__phonetic">
               {t.etymology.phonetic}
             </span>{' '}
-            <span className="syro-etymology__pos">
-              {t.etymology.partOfSpeech}
+            <span className="syro-etymology__origin">
+              {t.etymology.origin}
             </span>
             <span className="syro-etymology__sep" aria-hidden="true">
               {' '}
@@ -186,10 +223,15 @@ function Home() {
           </p>
 
           <p className="syro-etymology__statement">
-            <span className="syro-etymology__dropped" aria-hidden="true">
-              Py
+            <span className="syro-etymology__prefix">
+              {t.etymology.statementPrefix}{' '}
             </span>
-            {t.etymology.statement}
+            <span className="syro-etymology__dropped" aria-hidden="true">
+              {t.etymology.droppedPrefix}
+            </span>
+            <strong className="syro-etymology__brand">
+              {t.etymology.brandName}
+            </strong>
           </p>
         </header>
 
@@ -216,10 +258,10 @@ function Home() {
 
       {/* Bottom center subtle navigation link */}
       <nav className="syro-bottom-nav" aria-label="Secondary">
-        {view === 'home' ? (
+        {targetView === 'home' ? (
           <button
             type="button"
-            onClick={() => setView('about')}
+            onClick={() => switchView('about')}
             className="syro-bottom-link"
           >
             {t.aboutLink}
@@ -227,7 +269,7 @@ function Home() {
         ) : (
           <button
             type="button"
-            onClick={() => setView('home')}
+            onClick={() => switchView('home')}
             className="syro-bottom-link syro-bottom-link--back"
           >
             <ArrowLeft size={14} aria-hidden="true" />
