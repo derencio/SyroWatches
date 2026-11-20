@@ -9,9 +9,11 @@ export interface DictionaryContent {
   etymology: {
     word: string
     phonetic: string
-    partOfSpeech: string
+    origin: string
     definition: string
-    statement: string
+    statementPrefix: string
+    droppedPrefix: string
+    brandName: string
   }
   about: {
     heading: string
@@ -31,12 +33,14 @@ export const DICTIONARY: Record<Locale, DictionaryContent> = {
     themeToDay: 'Switch to day version',
     themeToNight: 'Switch to night version',
     etymology: {
-      word: 'Pysyro',
-      phonetic: '/py·sy·ro/',
-      partOfSpeech: 'noun · origin',
+      word: 'Pysyrõ',
+      phonetic: '/py·sy·rõ/',
+      origin: 'verb · Old Tupi',
       definition:
-        'an initial spark; the first sketch of time before transformation and renewal.',
-      statement: 'We are Syro.',
+        'to set free, to liberate, to break away from constraints.',
+      statementPrefix: 'We are',
+      droppedPrefix: 'Py',
+      brandName: 'Syro.',
     },
     about: {
       heading: 'About us',
@@ -57,12 +61,14 @@ export const DICTIONARY: Record<Locale, DictionaryContent> = {
     themeToDay: 'Mudar para versão dia',
     themeToNight: 'Mudar para versão noite',
     etymology: {
-      word: 'Pysyro',
-      phonetic: '/py·sy·ro/',
-      partOfSpeech: 'subst. · origem',
+      word: 'Pysyrõ',
+      phonetic: '/py·sy·rõ/',
+      origin: 'verbo · Tupi antigo',
       definition:
-        'uma faísca inicial; o primeiro esboço do tempo antes da transformação e do recomeço.',
-      statement: 'We are Syro.',
+        'libertar-se, soltar-se, desprender-se de amarras.',
+      statementPrefix: 'We are',
+      droppedPrefix: 'Py',
+      brandName: 'Syro.',
     },
     about: {
       heading: 'Sobre nós',
