@@ -14,32 +14,6 @@ type View = 'home' | 'about'
 /** Fade duration in ms — keep in sync with `.syro-view` transition in styles.css. */
 const FADE_MS = 360
 
-/** Interlocking rings emblem forming the subtle "S" negative space */
-function SyroRingsEmblem() {
-  return (
-    <div className="syro-about__emblem" aria-hidden="true">
-      <svg viewBox="0 0 64 56" focusable="false">
-        {/* Upper-left interlocking ring */}
-        <path
-          d="M 38 14 A 13 13 0 1 0 38 34"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3.4"
-          strokeLinecap="round"
-        />
-        {/* Lower-right interlocking ring */}
-        <path
-          d="M 26 42 A 13 13 0 1 0 26 22"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3.4"
-          strokeLinecap="round"
-        />
-      </svg>
-    </div>
-  )
-}
-
 function ArtistPaletteIcon({ label }: { label: string }) {
   return (
     <span className="syro-teaser-icon" title={label} aria-label={label}>
@@ -200,7 +174,8 @@ function Home() {
         aria-hidden={visibleView !== 'about'}
         aria-labelledby="syro-about-heading"
       >
-        <SyroRingsEmblem />
+        {/* Official brand emblem (rings icon only, white on dark / dark on light) */}
+        <div className="syro-about__emblem" aria-hidden="true" />
 
         <header className="syro-etymology">
           <p className="syro-etymology__entry">
