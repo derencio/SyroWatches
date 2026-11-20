@@ -538,37 +538,54 @@ body {
   }
 }
 
+
 /* ───────────────────────── About Us & Transitions ───────────────────────── */
 
 .syro-view {
   grid-area: 1 / 1;
   transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0.55s ease;
+    opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.36s ease;
 }
 
 .syro-view.is-active {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
   visibility: visible;
   pointer-events: auto;
 }
 
 .syro-view.is-hidden {
   opacity: 0;
-  transform: translateY(10px) scale(0.985);
+  transform: translateY(8px);
   visibility: hidden;
   pointer-events: none;
 }
 
 .syro-about {
   width: min(100%, 40rem);
-  padding: 3.5rem 0.5rem 4.5rem;
+  padding: 2.75rem 0.5rem 4.5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
+}
+
+/* Centered interlocking rings mark at the top */
+.syro-about__emblem {
+  align-self: center;
+  width: 2.6rem;
+  height: 2.25rem;
+  margin-bottom: 1.75rem;
+  color: var(--syro-ink);
+  opacity: 0.9;
+}
+
+.syro-about__emblem svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .syro-etymology {
@@ -597,7 +614,7 @@ body {
   letter-spacing: 0.02em;
 }
 
-.syro-etymology__pos {
+.syro-etymology__origin {
   font-size: 0.72em;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -610,42 +627,37 @@ body {
 }
 
 .syro-etymology__statement {
-  margin: 0.65rem 0 0;
-  font-size: clamp(1.5rem, 3.6vw, 2.25rem);
-  font-weight: 500;
+  margin: 0.75rem 0 0;
+  font-size: clamp(1.55rem, 3.6vw, 2.3rem);
   letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--syro-ink);
 }
 
-/* Subtle crossed-out/faded "Py" echo reinforcing the reinvention into Syro */
-.syro-etymology__dropped {
-  display: inline-block;
-  margin-right: 0.28em;
+.syro-etymology__prefix {
   font-weight: 300;
-  font-style: italic;
-  text-decoration: line-through;
-  text-decoration-thickness: 1.5px;
-  opacity: 0.24;
-  transform: translateY(-1px);
 }
 
+/* Barely visible "Py" showing the shedding of the old prefix */
+.syro-etymology__dropped {
+  display: inline-block;
+  margin-right: 0.04em;
+  font-weight: 300;
+  opacity: 0.14;
+  user-select: none;
+}
+
+.syro-etymology__brand {
+  font-weight: 700;
+}
+
+/* Simple ink-colored em-dash separator */
 .syro-about__divider {
-  width: 3.5rem;
-  height: 2px;
-  border-radius: 999px;
-  margin: 0.25rem 0 1.5rem;
-  background: linear-gradient(
-    90deg,
-    #ff2a2a,
-    #ff8a00,
-    #ffe600,
-    #2ee86b,
-    #00b7ff,
-    #4a3bff,
-    #b026ff
-  );
-  opacity: 0.85;
+  width: 2rem;
+  height: 1.5px;
+  margin: 0.15rem 0 1.5rem;
+  background-color: var(--syro-ink);
+  opacity: 0.45;
 }
 
 .syro-about__body {
@@ -671,11 +683,14 @@ body {
   color: color-mix(in srgb, var(--syro-ink) 86%, transparent);
 }
 
+/* Centered teaser icons relative to the text block */
 .syro-teasers {
-  margin-top: 2rem;
+  align-self: center;
+  margin-top: 2.25rem;
   display: flex;
   align-items: center;
-  gap: 1.15rem;
+  justify-content: center;
+  gap: 1.25rem;
   color: var(--syro-soft);
 }
 
