@@ -8,26 +8,42 @@ const CY = 70
 
 const TICKS = Array.from({ length: 60 }, (_, i) => i)
 
+type Lang = 'en' | 'pt'
+
 /**
  * A thin-line wristwatch showing the visitor's local time with smoothly
  * sweeping hands. Clicking or tapping turns it into a friendly two-eyed
  * smiling face that gives a warm welcoming wink, then returns to the watch.
  */
-export function WristWatch() {
+export function WristWatch({ lang = 'en' }: { lang?: Lang }) {
   const hourRef = useRef<SVGLineElement>(null)
   const minuteRef = useRef<SVGLineElement>(null)
   const secondRef = useRef<SVGGElement>(null)
-  const [label, setLabel] = useState('Wristwatch showing the current time')
+  const [label, setLabel] = useState(
+    lang === 'pt'
+      ? 'Relógio de pulso mostrando a hora atual'
+      : 'Wristwatch showing the current time',
+  )
   const [winking, setWinking] = useState(false)
   const timer = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     let frame = 0
     let lastMinute = -1
-    const fmt = new Intl.DateTimeFormat(undefined, {
+    const locale = lang === 'pt' ? 'pt-BR' : undefined
+    const fmt = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       minute: '2-digit',
     })
+
+    const updateLabel = (now: Date) => {
+      const formatted = fmt.format(now)
+      setLabel(
+        lang === 'pt'
+          ? `São ${formatted}. Toque para piscar.`
+          : `The time is ${formatted}. Tap to wink.`,
+      )
+    }
 
     const tick = () => {
       // Local time in the visitor's own time zone.
@@ -51,17 +67,18 @@ export function WristWatch() {
 
       if (now.getMinutes() !== lastMinute) {
         lastMinute = now.getMinutes()
-        setLabel(`The time is ${fmt.format(now)}. Tap to wink.`)
+        updateLabel(now)
       }
       frame = requestAnimationFrame(tick)
     }
 
+    updateLabel(new Date())
     frame = requestAnimationFrame(tick)
     return () => {
       cancelAnimationFrame(frame)
       window.clearTimeout(timer.current)
     }
-  }, [])
+  }, [lang])
 
   const wink = () => {
     if (winking) return
@@ -75,7 +92,7 @@ export function WristWatch() {
       onClick={wink}
       className={`syro-watch${winking ? ' is-winking' : ''}`}
       aria-label={label}
-      title="Tap me"
+      title={lang === 'pt' ? 'Toque aqui' : 'Tap me'}
     >
       <svg viewBox="0 0 100 140" aria-hidden="true" focusable="false">
         <g className="syro-watch__face">
