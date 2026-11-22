@@ -1,79 +1,105 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Moon, Sun } from 'lucide-react'
+import { ArrowLeft, Moon, Sun } from 'lucide-react'
 import { WristWatch } from '@/components/wrist-watch'
+import { DICTIONARY, type Locale } from '@/lib/i18n'
 
 export const Route = createFileRoute('/')({
   component: Home,
 })
 
 type Theme = 'night' | 'day'
-type Lang = 'en' | 'pt'
 type View = 'home' | 'about'
 
-const COPY = {
-  en: {
-    tagline: 'Time is ticking',
-    switchToDay: 'Switch to day version',
-    switchToNight: 'Switch to night version',
-    dayTitle: 'Day version',
-    nightTitle: 'Night version',
-    langGroupLabel: 'Language selector',
-    switchToEn: 'Switch language to English',
-    switchToPt: 'Switch language to Portuguese (Brazil)',
-    documentLang: 'en',
-    aboutNav: 'About Us',
-    backNav: 'Back',
-    aboutNavAria: 'Read about Syro',
-    backNavAria: 'Return to main screen',
-    etymologyWord: 'synchro',
-    etymologyPhonetic: '/ˈsɪŋ.kroʊ/',
-    etymologyOrigin: 'Greek · sýnkhronos',
-    etymologyDef: 'occurring at the same time; moving in unison.',
-    etymologyPrefix: 'We took the noise out of ',
-    aboutTitle: 'About Us',
-    aboutParagraphs: [
-      'Syro is an independent watchmaking studio built on quiet precision, essential geometry, and the honest rhythm of mechanical and contemporary horology.',
-      'Every timepiece is conceived to strip away excess—leaving only proportion, legibility, and the calm certainty of a moment shared in sync.',
-    ],
-    teaserWatchLabel: 'Timepieces',
-    teaserCompassLabel: 'Engineering & Craft',
-    teaserMoonSunLabel: 'Day & Night',
-  },
-  pt: {
-    tagline: 'O tempo está passando',
-    switchToDay: 'Mudar para versão diurna',
-    switchToNight: 'Mudar para versão noturna',
-    dayTitle: 'Versão diurna',
-    nightTitle: 'Versão noturna',
-    langGroupLabel: 'Seletor de idioma',
-    switchToEn: 'Mudar idioma para Inglês',
-    switchToPt: 'Mudar idioma para Português (Brasil)',
-    documentLang: 'pt-BR',
-    aboutNav: 'Sobre Nós',
-    backNav: 'Voltar',
-    aboutNavAria: 'Conhecer a história da Syro',
-    backNavAria: 'Voltar para a tela principal',
-    etymologyWord: 'synchro',
-    etymologyPhonetic: '/ˈsɪŋ.kroʊ/',
-    etymologyOrigin: 'Grego · sýnkhronos',
-    etymologyDef: 'que ocorre ao mesmo tempo; em uníssono.',
-    etymologyPrefix: 'Tiramos o ruído de ',
-    aboutTitle: 'Sobre Nós',
-    aboutParagraphs: [
-      'A Syro é um estúdio independente de relojoaria guiado pela precisão silenciosa, pela geometria essencial e pelo ritmo honesto entre a tradição mecânica e o design contemporâneo.',
-      'Cada peça nasce para eliminar o excesso — preservando apenas a proporção, a legibilidade e a certeza serena de um instante em plena sintonia.',
-    ],
-    teaserWatchLabel: 'Relógios',
-    teaserCompassLabel: 'Engenharia e Ofício',
-    teaserMoonSunLabel: 'Dia e Noite',
-  },
-} as const
+/** Fade duration in ms — keep in sync with `.syro-view` transition in styles.css. */
+const FADE_MS = 360
+
+function ArtistPaletteIcon({ label }: { label: string }) {
+  return (
+    <span className="syro-teaser-icon" title={label} aria-label={label}>
+      <svg viewBox="0 0 36 28" aria-hidden="true" focusable="false">
+        <path
+          d="M18 3C9.5 3 3 8.8 3 15.2C3 20.6 7.4 24.5 13.2 24.5C15.4 24.5 16.8 23.3 16.8 21.7C16.8 20.6 16.1 19.8 16.1 18.8C16.1 17.5 17.3 16.7 19.1 16.7H22.2C28.4 16.7 33 13.3 33 8.9C33 5.4 26.6 3 18 3Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle
+          cx="25.8"
+          cy="10.2"
+          r="2.1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.15"
+        />
+        <circle cx="9.2" cy="13.5" r="1.45" fill="#ff3b30" />
+        <circle cx="12.6" cy="9.2" r="1.45" fill="#ffcc00" />
+        <circle cx="18.2" cy="7.8" r="1.45" fill="#2ee86b" />
+        <circle cx="9.6" cy="18.4" r="1.45" fill="#00b7ff" />
+      </svg>
+    </span>
+  )
+}
+
+function SunMoonFlipIcon({ label }: { label: string }) {
+  return (
+    <span className="syro-teaser-icon" title={label} aria-label={label}>
+      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <circle
+          cx="16"
+          cy="16"
+          r="11.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          strokeDasharray="2 2.2"
+          opacity="0.45"
+        />
+        <line
+          x1="7.5"
+          y1="24.5"
+          x2="24.5"
+          y2="7.5"
+          stroke="currentColor"
+          strokeWidth="1.1"
+          opacity="0.55"
+        />
+        <circle
+          cx="11.5"
+          cy="11.5"
+          r="3.1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+        />
+        <path
+          d="M11.5 6.2V7.3M11.5 15.7V16.8M6.2 11.5H7.3M15.7 11.5H16.8M7.8 7.8L8.6 8.6M14.4 14.4L15.2 15.2"
+          stroke="currentColor"
+          strokeWidth="1.15"
+          strokeLinecap="round"
+        />
+        <path
+          d="M22.2 17.8C20.2 18.1 18.8 19.8 19.1 21.8C19.4 23.6 21 24.9 22.8 24.8C21.3 25.8 19.2 25.6 17.9 24.2C16.5 22.7 16.6 20.3 18.1 18.9C19.2 17.8 20.8 17.4 22.2 17.8Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  )
+}
 
 function Home() {
   const [theme, setTheme] = useState<Theme>('night')
-  const [lang, setLang] = useState<Lang>('en')
-  const [view, setView] = useState<View>('home')
+  const [targetView, setTargetView] = useState<View>('home')
+  const [visibleView, setVisibleView] = useState<View | null>('home')
+  const [locale, setLocale] = useState<Locale>('en')
+  const transitionTimer = useRef<number | undefined>(undefined)
+
+  const t = DICTIONARY[locale]
 
   // Sync with whatever the pre-paint script in __root.tsx applied and restore saved language (default: EN).
   useEffect(() => {
@@ -83,23 +109,35 @@ function Home() {
     try {
       const savedLang = localStorage.getItem('syro-lang')
       if (savedLang === 'pt' || savedLang === 'en') {
-        setLang(savedLang)
-        document.documentElement.lang = COPY[savedLang].documentLang
+        setLocale(savedLang)
+        document.documentElement.lang = savedLang === 'pt' ? 'pt-BR' : 'en'
       }
     } catch {
       /* storage unavailable — keep default EN */
     }
+    return () => window.clearTimeout(transitionTimer.current)
   }, [])
 
-  // Allow Escape key to return from About Us to the main view.
-  useEffect(() => {
-    if (view !== 'about') return
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setView('home')
+  const selectLocale = (next: Locale) => {
+    setLocale(next)
+    document.documentElement.lang = next === 'pt' ? 'pt-BR' : 'en'
+    try {
+      localStorage.setItem('syro-lang', next)
+    } catch {
+      /* storage unavailable — language still switches for this visit */
     }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [view])
+  }
+
+  const switchView = (next: View) => {
+    if (next === targetView) return
+    setTargetView(next)
+    // Fade out the current view completely before revealing the next view.
+    setVisibleView(null)
+    window.clearTimeout(transitionTimer.current)
+    transitionTimer.current = window.setTimeout(() => {
+      setVisibleView(next)
+    }, FADE_MS)
+  }
 
   const toggleTheme = () => {
     const next: Theme = theme === 'night' ? 'day' : 'night'
@@ -112,42 +150,38 @@ function Home() {
     }
   }
 
-  const selectLang = (next: Lang) => {
-    setLang(next)
-    document.documentElement.lang = COPY[next].documentLang
-    try {
-      localStorage.setItem('syro-lang', next)
-    } catch {
-      /* storage unavailable — language still switches for this visit */
-    }
-  }
-
-  const t = COPY[lang]
-
   return (
-    <main className="syro-page">
+    <main className={`syro-page ${targetView === 'about' ? 'is-about' : ''}`}>
       <div className="syro-controls">
         <div
           className="syro-lang-switch"
           role="group"
-          aria-label={t.langGroupLabel}
+          aria-label={locale === 'pt' ? 'Seletor de idioma' : 'Language selector'}
         >
           <button
             type="button"
-            onClick={() => selectLang('pt')}
-            className={`syro-lang-btn${lang === 'pt' ? ' is-active' : ''}`}
-            aria-pressed={lang === 'pt'}
-            aria-label={t.switchToPt}
+            onClick={() => selectLocale('pt')}
+            className={`syro-lang-btn${locale === 'pt' ? ' is-active' : ''}`}
+            aria-pressed={locale === 'pt'}
+            aria-label={
+              locale === 'pt'
+                ? 'Mudar idioma para Português (Brasil)'
+                : 'Switch language to Portuguese (Brazil)'
+            }
             title="Português (BR)"
           >
             BR
           </button>
           <button
             type="button"
-            onClick={() => selectLang('en')}
-            className={`syro-lang-btn${lang === 'en' ? ' is-active' : ''}`}
-            aria-pressed={lang === 'en'}
-            aria-label={t.switchToEn}
+            onClick={() => selectLocale('en')}
+            className={`syro-lang-btn${locale === 'en' ? ' is-active' : ''}`}
+            aria-pressed={locale === 'en'}
+            aria-label={
+              locale === 'pt'
+                ? 'Mudar idioma para Inglês'
+                : 'Switch language to English'
+            }
             title="English (EN)"
           >
             EN
@@ -158,17 +192,25 @@ function Home() {
           type="button"
           onClick={toggleTheme}
           className="syro-toggle"
-          aria-label={theme === 'night' ? t.switchToDay : t.switchToNight}
-          title={theme === 'night' ? t.dayTitle : t.nightTitle}
+          aria-label={theme === 'night' ? t.themeToDay : t.themeToNight}
+          title={
+            theme === 'night'
+              ? locale === 'pt'
+                ? 'Versão diurna'
+                : 'Day version'
+              : locale === 'pt'
+                ? 'Versão noturna'
+                : 'Night version'
+          }
         >
           {theme === 'night' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
       </div>
 
-      {/* Home View */}
-      <section
-        className={`syro-view syro-stage${view === 'home' ? ' is-active' : ' is-hidden'}`}
-        aria-hidden={view !== 'home'}
+      {/* Primary Hero Stage */}
+      <div
+        className={`syro-stage syro-view ${visibleView === 'home' ? 'is-active' : 'is-hidden'}`}
+        aria-hidden={visibleView !== 'home'}
       >
         <h1 className="syro-logo" role="img" aria-label="Syro">
           <span className="sr-only">Syro</span>
@@ -188,117 +230,101 @@ function Home() {
           </span>
           <span className="sr-only">...</span>
         </p>
-      </section>
+      </div>
 
-      {/* About Us View */}
+      {/* Sequential About Us Stage */}
       <section
-        className={`syro-view syro-about${view === 'about' ? ' is-active' : ' is-hidden'}`}
-        aria-hidden={view !== 'about'}
+        className={`syro-about syro-view ${visibleView === 'about' ? 'is-active' : 'is-hidden'}`}
+        aria-hidden={visibleView !== 'about'}
         aria-labelledby="syro-about-heading"
       >
+        {/* Official brand emblem (rings icon only, white on dark / dark on light) */}
         <div className="syro-about__emblem" aria-hidden="true" />
 
-        <div className="syro-etymology">
+        <header className="syro-etymology">
           <p className="syro-etymology__entry">
-            <span className="syro-etymology__word">{t.etymologyWord}</span>{' '}
+            <strong className="syro-etymology__word">
+              <em>{t.etymology.word}</em>
+            </strong>{' '}
             <span className="syro-etymology__phonetic">
-              {t.etymologyPhonetic}
+              {t.etymology.phonetic}
             </span>{' '}
             <span className="syro-etymology__origin">
-              ({t.etymologyOrigin})
-            </span>{' '}
-            <span className="syro-etymology__sep">—</span>{' '}
-            <span className="syro-etymology__def">{t.etymologyDef}</span>
+              {t.etymology.origin}
+            </span>
+            <span className="syro-etymology__sep" aria-hidden="true">
+              {' '}
+              —{' '}
+            </span>
+            <span className="syro-etymology__def">
+              {t.etymology.definition}
+            </span>
           </p>
 
           <p className="syro-etymology__statement">
-            <span className="syro-etymology__prefix">{t.etymologyPrefix}</span>
-            <span className="syro-etymology__brand">sy</span>
-            <span className="syro-etymology__dropped" aria-hidden="true">
-              nch
+            <span className="syro-etymology__prefix">
+              {t.etymology.statementPrefix}{' '}
             </span>
-            <span className="syro-etymology__brand">ro</span>
-            <span className="syro-etymology__prefix">.</span>
+            <span className="syro-etymology__dropped" aria-hidden="true">
+              {t.etymology.droppedPrefix}
+            </span>
+            <strong className="syro-etymology__brand">
+              {t.etymology.brandName}
+            </strong>
           </p>
-        </div>
+        </header>
 
         <div className="syro-about__divider" aria-hidden="true" />
 
         <div className="syro-about__body">
           <h2 id="syro-about-heading" className="syro-about__title">
-            {t.aboutTitle}
+            {t.about.heading}
           </h2>
-          {t.aboutParagraphs.map((paragraph, idx) => (
+
+          {t.about.paragraphs.map((paragraph, idx) => (
             <p key={idx} className="syro-about__text">
               {paragraph}
             </p>
           ))}
         </div>
 
-        <div className="syro-teasers" aria-hidden="true">
-          <span className="syro-teaser-icon" title={t.teaserWatchLabel}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="6" />
-              <polyline points="12 9 12 12 14 13.5" />
-              <path d="M9 6.5V3h6v3.5" />
-              <path d="M9 17.5V21h6v-3.5" />
-            </svg>
-          </span>
-
-          <span className="syro-teasers__dot" />
-
-          <span className="syro-teaser-icon" title={t.teaserCompassLabel}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <circle cx="12" cy="12" r="2" />
-              <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
-            </svg>
-          </span>
-
-          <span className="syro-teasers__dot" />
-
-          <span className="syro-teaser-icon" title={t.teaserMoonSunLabel}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-            </svg>
-          </span>
+        <div
+          className="syro-teasers"
+          role="group"
+          aria-label={locale === 'pt' ? 'Conceitos futuros' : 'Upcoming concepts'}
+        >
+          <ArtistPaletteIcon label={t.teasers.paletteLabel} />
+          <span className="syro-teasers__dot" aria-hidden="true" />
+          <SunMoonFlipIcon label={t.teasers.dayNightLabel} />
         </div>
       </section>
 
-      <nav className="syro-bottom-nav" aria-label={t.aboutTitle}>
-        <button
-          type="button"
-          onClick={() => setView(view === 'home' ? 'about' : 'home')}
-          className="syro-bottom-link"
-          aria-expanded={view === 'about'}
-          aria-label={view === 'home' ? t.aboutNavAria : t.backNavAria}
-        >
-          {view === 'home' ? t.aboutNav : t.backNav}
-        </button>
+      {/* Bottom center subtle navigation link */}
+      <nav
+        className="syro-bottom-nav"
+        aria-label={locale === 'pt' ? 'Secundária' : 'Secondary'}
+      >
+        {targetView === 'home' ? (
+          <button
+            type="button"
+            onClick={() => switchView('about')}
+            className="syro-bottom-link"
+          >
+            {t.aboutLink}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => switchView('home')}
+            className="syro-bottom-link syro-bottom-link--back"
+          >
+            <ArrowLeft size={14} aria-hidden="true" />
+            <span>{t.backLink}</span>
+          </button>
+        )}
       </nav>
 
-      <WristWatch lang={lang} />
+      <WristWatch lang={locale} />
     </main>
   )
 }
